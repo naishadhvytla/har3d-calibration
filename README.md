@@ -2,7 +2,7 @@
 
 Code, result tables and manuscript generators for *"When Is Calibration
 Measurable? A Sample-Size–Controlled Study of Confidence Reliability in 3D
-Skeleton Action Recognition"* (Naishadh Vytla and Kiran Kumar Eepuri, Koneru Lakshmaiah Education Foundation).
+Skeleton Action Recognition"* (Naishadh Vytla, Kiran Kumar Eepuri, R. Sekhar, Pardhu Thottempudi and Avishek Chakraborty).
 
 The study asks when the expected calibration error (ECE) of a skeleton
 action-recognition model can be told apart from estimator bias. It tests every

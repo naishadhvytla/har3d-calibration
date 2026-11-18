@@ -9,5 +9,14 @@ authors:
   - family-names: Eepuri
     given-names: Kiran Kumar
     affiliation: "Koneru Lakshmaiah Education Foundation, Guntur, India"
+  - family-names: Sekhar
+    given-names: R.
+    affiliation: "Presidency University, Bengaluru, India"
+  - family-names: Thottempudi
+    given-names: Pardhu
+    affiliation: "Koneru Lakshmaiah Education Foundation, Guntur, India"
+  - family-names: Chakraborty
+    given-names: Avishek
+    affiliation: "Manipal Institute of Technology, Manipal Academy of Higher Education, Manipal, India"
 repository-code: "https://github.com/naishadhvytla/har3d-calibration"
 license: MIT
