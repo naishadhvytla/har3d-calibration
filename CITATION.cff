@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this code or these results, please cite the paper."
+title: "When Is Calibration Measurable? A Sample-Size-Controlled Study of Confidence Reliability in 3D Skeleton Action Recognition"
+authors:
+  - family-names: Vytla
+    given-names: Naishadh
+    affiliation: "Koneru Lakshmaiah Education Foundation, Guntur, India"
+    orcid: "https://orcid.org/0009-0006-0188-2166"
+  - family-names: Eepuri
+    given-names: Kiran Kumar
+    affiliation: "Koneru Lakshmaiah Education Foundation, Guntur, India"
+repository-code: "https://github.com/naishadhvytla/har3d-calibration"
+license: MIT
