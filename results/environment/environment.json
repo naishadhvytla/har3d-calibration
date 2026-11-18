@@ -1,0 +1,120 @@
+{
+  "python": "3.13.16",
+  "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+  "packages": {
+    "numpy": "2.4.6",
+    "scipy": "1.16.3",
+    "torch": "2.14.1+cu130",
+    "matplotlib": "3.10.0",
+    "pandas": "2.2.3",
+    "sklearn": "1.6.1",
+    "h5py": "3.14.0"
+  },
+  "config": {
+    "DRIVE_ROOT": "/content/drive/MyDrive/har3d",
+    "RUN_TAG": "final",
+    "SEED_EVERYTHING": 0,
+    "SEEDS": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "ABLATION_SEEDS": [
+      0,
+      1,
+      2
+    ],
+    "STREAMS": [
+      "joint",
+      "bone",
+      "joint_motion",
+      "bone_motion"
+    ],
+    "T_FRAMES": 64,
+    "MAX_EPOCHS_MSR": 120,
+    "PATIENCE_MSR": 15,
+    "MIN_EPOCHS_MSR": 10,
+    "MC_PASSES": 20,
+    "MC_P_GRID": [
+      0.05,
+      0.1,
+      0.2,
+      0.3
+    ],
+    "MAX_ZERO_FRAC": 0.5,
+    "MIN_FRAMES": 5,
+    "LADDER_N": [
+      500,
+      1000,
+      2000,
+      5000,
+      10000,
+      20000,
+      40091
+    ],
+    "LADDER_SEEDS": [
+      0,
+      1,
+      2
+    ],
+    "LADDER_BACKBONES": [
+      "stgcn",
+      "agcn",
+      "ctrgcn"
+    ],
+    "LADDER_STREAM": "joint",
+    "NTU_VAL_SUBJECTS": 4,
+    "LADDER_MAX_STEPS": 40000,
+    "LADDER_EVAL_EVERY": 250,
+    "LADDER_PATIENCE": 8,
+    "LADDER_MIN_STEPS": 500,
+    "RUN_FIXED_BUDGET_ABLATION": true,
+    "FIXED_BUDGET_STEPS": 6000,
+    "RUN_FREEZE_ABLATION": true,
+    "FREEZE_AFTER_STEPS": 1000,
+    "FREEZE_RUNGS": [
+      2000,
+      5000,
+      10000,
+      20000,
+      40091
+    ],
+    "REPL_SEEDS": [
+      3,
+      4
+    ],
+    "REPL_EXTRA_SEEDS": [
+      5
+    ],
+    "RUN_REPL_EXTRA": false,
+    "REPL_RUNGS": [
+      10000,
+      20000,
+      40091
+    ],
+    "REPL_SNAPSHOT_STEPS": [
+      2000,
+      4000,
+      6000,
+      8000,
+      10000,
+      12000
+    ],
+    "RUN_ENV_RERUNS": true,
+    "ENV_RERUN_SEED": 0,
+    "ENV_RERUN_RUNG": 10000,
+    "ALLOW_ENV_MIX": false,
+    "ALLOW_CPU_TRAINING": false,
+    "RUN_PREP_SENSITIVITY": true,
+    "RERUN_OLD_STATS": false,
+    "RERUN_REVIEW_STATS": false,
+    "REQUIRE_EXISTING_RUN": true
+  },
+  "cuda": {
+    "available": true,
+    "version": "13.0",
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+  }
+}

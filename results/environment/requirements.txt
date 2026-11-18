@@ -1,0 +1,7 @@
+numpy==2.4.6
+scipy==1.16.3
+torch==2.14.1+cu130
+matplotlib==3.10.0
+pandas==2.2.3
+sklearn==1.6.1
+h5py==3.14.0
