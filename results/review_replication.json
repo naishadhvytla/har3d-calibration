@@ -1,0 +1,31 @@
+{
+ "original_seeds": [
+  0,
+  1,
+  2
+ ],
+ "new_seeds": [
+  3,
+  4
+ ],
+ "big_rungs": [
+  10000,
+  20000,
+  32202
+ ],
+ "n_checkpoints": 126,
+ "n_env_reruns": 3,
+ "replication_env": {
+  "pinned": "Sun Nov 15 07:44:51 2026",
+  "stack": {
+   "python": "3.13.16",
+   "numpy": "2.4.6",
+   "torch": "2.14.1+cu130",
+   "cuda": "13.0",
+   "cudnn": 92800,
+   "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+  },
+  "platform": "Linux-6.6.159+-x86_64-with-glibc2.39"
+ },
+ "complete": true
+}

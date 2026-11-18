@@ -1,0 +1,12 @@
+{
+  "val_subjects": [
+    4,
+    8,
+    13,
+    38
+  ],
+  "n_val": 7889,
+  "n_pool": 32202,
+  "pool_sha1": "c172ade286bd8dd0",
+  "val_sha1": "887ab0ef102dd941"
+}

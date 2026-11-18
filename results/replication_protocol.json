@@ -1,0 +1,34 @@
+{
+  "registered": "Sun Nov 15 07:44:51 2026",
+  "status": "written before any replication run was trained",
+  "hypotheses": [
+    "H1: excess adaptive ECE of 2s-AGCN > ST-GCN at >= 10,000 training clips",
+    "H2: excess adaptive ECE of CTR-GCN > ST-GCN at >= 10,000 training clips"
+  ],
+  "rungs": [
+    10000,
+    20000,
+    40091
+  ],
+  "new_seeds": [
+    3,
+    4
+  ],
+  "optional_seeds": [
+    5
+  ],
+  "statistic": "per seed: difference in excess adaptive ECE (15 equal-mass bins, matched null floor) averaged over the three rungs",
+  "unit": "seed (independently initialised and subsampled training runs)",
+  "tests": [
+    "exact sign-flip test over seeds, two-sided",
+    "t-interval of the mean per-seed difference",
+    "reported for the new seeds alone and for all seeds"
+  ],
+  "protocol": "identical to Stage 8: same pool, validation subjects, test set, stratified subsample per (n, seed), early stopping on validation NLL",
+  "secondary": [
+    "same comparison at matched training steps [2000, 4000, 6000, 8000, 10000, 12000]",
+    "same comparison at the best-validation-accuracy checkpoint",
+    "same-seed re-runs in the replication environment vs the stored originals"
+  ],
+  "exploratory": "the comparison on seeds 0-2 in the first version (threshold chosen post hoc)"
+}

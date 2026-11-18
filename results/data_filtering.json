@@ -1,0 +1,80 @@
+{
+  "action3d": {
+    "n_raw": 567,
+    "n_kept": 560,
+    "n_dropped": 7,
+    "dropped": [
+      {
+        "index": 168,
+        "action": 7,
+        "subject": 4,
+        "episode": 1,
+        "n_frames": 45,
+        "zero_joint_frac": 0.8
+      },
+      {
+        "index": 362,
+        "action": 13,
+        "subject": 9,
+        "episode": 2,
+        "n_frames": 38,
+        "zero_joint_frac": 1.0
+      },
+      {
+        "index": 363,
+        "action": 13,
+        "subject": 9,
+        "episode": 3,
+        "n_frames": 936,
+        "zero_joint_frac": 0.791
+      },
+      {
+        "index": 540,
+        "action": 20,
+        "subject": 2,
+        "episode": 1,
+        "n_frames": 56,
+        "zero_joint_frac": 0.571
+      },
+      {
+        "index": 541,
+        "action": 20,
+        "subject": 2,
+        "episode": 2,
+        "n_frames": 50,
+        "zero_joint_frac": 0.58
+      },
+      {
+        "index": 542,
+        "action": 20,
+        "subject": 2,
+        "episode": 3,
+        "n_frames": 53,
+        "zero_joint_frac": 0.623
+      },
+      {
+        "index": 552,
+        "action": 20,
+        "subject": 6,
+        "episode": 1,
+        "n_frames": 54,
+        "zero_joint_frac": 0.611
+      }
+    ],
+    "rule": "zero_joint_frac > 0.5 or n_frames < 5"
+  },
+  "daily": {
+    "n_raw": 320,
+    "n_kept": 320,
+    "n_dropped": 0,
+    "dropped": [],
+    "rule": "zero_joint_frac > 0.5 or n_frames < 5"
+  },
+  "utkinect": {
+    "n_raw": 199,
+    "n_kept": 199,
+    "n_dropped": 0,
+    "dropped": [],
+    "rule": "zero_joint_frac > 0.5 or n_frames < 5"
+  }
+}
