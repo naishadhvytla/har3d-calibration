@@ -1,0 +1,5 @@
+model_a,model_b,regime,n_pairs,n_a_higher,mean_delta,p,p_holm
+agcn,stgcn,low,12,1,-0.0337,0.0063,0.0156
+agcn,stgcn,high,9,9,+0.0393,0.0039,0.0156
+ctrgcn,stgcn,low,12,3,-0.0116,0.1460,0.1460
+ctrgcn,stgcn,high,9,9,+0.0410,0.0039,0.0156

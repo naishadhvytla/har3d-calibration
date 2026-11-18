@@ -1,0 +1,13 @@
+dataset,stream,n_cells,n_cells_reduced,mean_reduction,n_test_sets,n_test_sets_reduced,test_set_min,test_set_max
+action3d,bone,20,8,-0.0082,4,1,-0.0386,+0.0082
+action3d,bone_motion,20,16,+0.0395,4,4,+0.0111,+0.0755
+action3d,joint,20,9,-0.0118,4,2,-0.0527,+0.0137
+action3d,joint_motion,20,15,+0.0284,4,2,-0.0086,+0.0868
+daily,bone,20,9,-0.0010,4,2,-0.0179,+0.0101
+daily,bone_motion,20,10,-0.0023,4,1,-0.0182,+0.0158
+daily,joint,20,13,+0.0107,4,4,+0.0055,+0.0169
+daily,joint_motion,20,16,+0.0052,4,4,+0.0008,+0.0129
+utkinect,bone,20,14,+0.0104,4,3,-0.0019,+0.0205
+utkinect,bone_motion,20,17,+0.0388,4,4,+0.0101,+0.0796
+utkinect,joint,20,12,-0.0017,4,3,-0.0162,+0.0039
+utkinect,joint_motion,20,9,-0.0062,4,2,-0.0301,+0.0180

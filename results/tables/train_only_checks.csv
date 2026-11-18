@@ -1,0 +1,13 @@
+dataset,split,train_subjects,n_train_sequences,edges_rigid,edges,tree_length_ratio,edges_shared_with_optimum,joint_order_from_train_only,verdict
+action3d,rand0_frame0,1 2 9 10,234,19,19,1.017,17,,pass
+action3d,rand1_frame0,2 6 8 9,231,19,19,1.015,17,,pass
+action3d,rand2_frame0,2 4 7 8,212,19,19,1.018,17,,pass
+action3d,fixed_frame0,1 3 5 7,232,19,19,1.022,17,,pass
+daily,rand0_frame0,1 2 9 10,128,17,19,0.977,17,identity,pass
+daily,rand1_frame0,2 6 8 9,128,16,19,0.930,16,identity,pass
+daily,rand2_frame0,2 4 7 8,128,16,19,1.055,17,identity,pass
+daily,fixed_frame0,1 3 5 7,128,18,19,1.011,18,identity,pass
+utkinect,rand0_frame0,1 2 9 10,79,19,19,1.017,17,identity,pass
+utkinect,rand1_frame0,2 6 8 9,80,19,19,1.018,17,identity,pass
+utkinect,rand2_frame0,2 4 7 8,80,19,19,1.013,17,identity,pass
+utkinect,fixed_frame0,1 3 5 7,80,19,19,1.013,17,identity,pass

@@ -1,0 +1,27 @@
+family,model_a,model_b,n_train,n_seeds,delta_top1,delta_ece_adaptive,ci_lo,ci_hi,p_raw,p_holm,verdict,n_boot
+graph,agcn,stgcn,500,3,-0.0305,-0.0606,-0.0639,-0.0548,0.0004,0.0056,A lower ECE,5000
+graph,agcn,stgcn,1000,3,-0.0305,-0.0254,-0.0297,-0.0207,0.0004,0.0056,A lower ECE,5000
+graph,agcn,stgcn,2000,3,-0.0598,-0.0329,-0.0375,-0.0280,0.0004,0.0056,A lower ECE,5000
+graph,agcn,stgcn,5000,3,-0.0791,-0.0158,-0.0201,-0.0113,0.0004,0.0056,A lower ECE,5000
+graph,agcn,stgcn,10000,3,-0.0381,+0.0303,+0.0264,+0.0344,0.0004,0.0056,A higher ECE,5000
+graph,agcn,stgcn,20000,3,-0.0326,+0.0466,+0.0426,+0.0503,0.0004,0.0056,A higher ECE,5000
+graph,agcn,stgcn,32202,3,-0.0233,+0.0410,+0.0372,+0.0446,0.0004,0.0056,A higher ECE,5000
+graph,ctrgcn,stgcn,500,3,-0.0084,-0.0164,-0.0202,-0.0110,0.0004,0.0056,A lower ECE,5000
+graph,ctrgcn,stgcn,1000,3,+0.0100,+0.0256,+0.0206,+0.0296,0.0004,0.0056,A higher ECE,5000
+graph,ctrgcn,stgcn,2000,3,-0.0592,-0.0473,-0.0517,-0.0424,0.0004,0.0056,A lower ECE,5000
+graph,ctrgcn,stgcn,5000,3,-0.0608,-0.0085,-0.0126,-0.0040,0.0004,0.0056,A lower ECE,5000
+graph,ctrgcn,stgcn,10000,3,-0.0314,+0.0243,+0.0203,+0.0283,0.0004,0.0056,A higher ECE,5000
+graph,ctrgcn,stgcn,20000,3,-0.0272,+0.0547,+0.0509,+0.0584,0.0004,0.0056,A higher ECE,5000
+graph,ctrgcn,stgcn,32202,3,-0.0176,+0.0441,+0.0402,+0.0475,0.0004,0.0056,A higher ECE,5000
+freeze,agcn_frozen,agcn,2000,3,+0.0057,+0.0058,+0.0023,+0.0090,0.0012,0.0024,A higher ECE,5000
+freeze,agcn_frozen,agcn,5000,3,+0.0492,+0.0358,+0.0318,+0.0399,0.0004,0.0020,A higher ECE,5000
+freeze,agcn_frozen,agcn,10000,3,+0.0000,-0.0063,-0.0097,-0.0030,0.0004,0.0020,A lower ECE,5000
+freeze,agcn_frozen,agcn,20000,3,+0.0038,-0.0049,-0.0081,-0.0017,0.0036,0.0036,A lower ECE,5000
+freeze,agcn_frozen,agcn,32202,3,+0.0012,-0.0089,-0.0119,-0.0058,0.0004,0.0020,A lower ECE,5000
+budget,stgcn_fixed,stgcn,500,3,+0.0855,+0.2302,+0.2258,+0.2345,0.0004,0.0028,A higher ECE,5000
+budget,stgcn_fixed,stgcn,1000,3,+0.0838,+0.1478,+0.1430,+0.1519,0.0004,0.0028,A higher ECE,5000
+budget,stgcn_fixed,stgcn,2000,3,+0.0188,+0.0066,+0.0031,+0.0101,0.0016,0.0028,A higher ECE,5000
+budget,stgcn_fixed,stgcn,5000,3,-0.0094,-0.0729,-0.0762,-0.0649,0.0004,0.0028,A lower ECE,5000
+budget,stgcn_fixed,stgcn,10000,3,-0.0471,-0.0209,-0.0278,-0.0126,0.0004,0.0028,A lower ECE,5000
+budget,stgcn_fixed,stgcn,20000,3,-0.0810,+0.0263,+0.0188,+0.0341,0.0004,0.0028,A higher ECE,5000
+budget,stgcn_fixed,stgcn,32202,3,-0.0899,+0.0354,+0.0279,+0.0426,0.0004,0.0028,A higher ECE,5000

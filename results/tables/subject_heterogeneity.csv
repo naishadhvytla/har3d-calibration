@@ -1,0 +1,4 @@
+dataset,n_cells,n_subjects,phi_median,phi_mean,cells_p_lt_0.05,tau2_mean,tau,phi_mean_per_test_set
+action3d,80,10,1.994,3.549,35,0.007508,0.0866,3.80 3.42 4.58 2.40
+daily,80,10,0.795,0.913,3,-0.000496,0.0000,0.78 1.07 0.70 1.10
+utkinect,80,10,1.090,1.471,16,0.002548,0.0505,1.37 1.92 1.35 1.24

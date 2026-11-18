@@ -1,0 +1,4 @@
+dataset,n_cells,floor_raw,floor_ts,n_sim
+action3d,80,0.07530,0.06233,1000
+daily,80,0.11016,0.11150,1000
+utkinect,80,0.11292,0.08812,1000

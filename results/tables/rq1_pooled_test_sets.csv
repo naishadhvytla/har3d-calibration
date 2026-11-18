@@ -1,0 +1,13 @@
+dataset,split,mean_excess
+action3d,fixed_frame0,0.02328
+action3d,rand0_frame0,0.03648
+action3d,rand1_frame0,0.03243
+action3d,rand2_frame0,0.01716
+daily,fixed_frame0,0.01064
+daily,rand0_frame0,0.01702
+daily,rand1_frame0,0.00491
+daily,rand2_frame0,0.00451
+utkinect,fixed_frame0,0.01106
+utkinect,rand0_frame0,0.04255
+utkinect,rand1_frame0,0.01432
+utkinect,rand2_frame0,0.00905
