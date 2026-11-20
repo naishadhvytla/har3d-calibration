@@ -88,7 +88,7 @@
     "REPL_EXTRA_SEEDS": [
       5
     ],
-    "RUN_REPL_EXTRA": false,
+    "RUN_REPL_EXTRA": true,
     "REPL_RUNGS": [
       10000,
       20000,
@@ -110,6 +110,25 @@
     "RUN_PREP_SENSITIVITY": true,
     "RERUN_OLD_STATS": false,
     "RERUN_REVIEW_STATS": false,
+    "RUN_V8_TRAINING": true,
+    "ABL_ARCHS": [
+      "agcn_static",
+      "agcn_fixedgraph"
+    ],
+    "ABL_SEEDS": [
+      3,
+      4,
+      5,
+      0,
+      1,
+      2
+    ],
+    "PIN_SEEDS": [
+      0,
+      1,
+      2
+    ],
+    "PIN_ENVIRONMENT": true,
     "REQUIRE_EXISTING_RUN": true
   },
   "cuda": {

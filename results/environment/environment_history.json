@@ -122,5 +122,49 @@
     },
     "first_seen": "Sun Nov 15 07:03:36 2026",
     "last_seen": "Sun Nov 15 07:41:54 2026"
+  },
+  {
+    "session": "v8",
+    "note": "revision (v8): third replication seed, graph ablations of 2s-AGCN, original seeds retrained in the pinned environment of the replication (v7: replication seeds 3-4, environment re-runs, preprocessing sensitivity, dependence-aware and power statistics)",
+    "python": "3.13.16",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.4.6",
+      "scipy": "1.16.3",
+      "torch": "2.14.1+cu130",
+      "matplotlib": "3.10.0",
+      "pandas": "2.2.3",
+      "sklearn": "1.6.1",
+      "h5py": "3.14.0"
+    },
+    "cuda": {
+      "available": true,
+      "version": "13.0",
+      "device": "NVIDIA A100-SXM4-80GB"
+    },
+    "first_seen": "Thu Nov 19 15:42:45 2026",
+    "last_seen": "Thu Nov 19 17:23:23 2026"
+  },
+  {
+    "session": "v8.2",
+    "note": "revision (v8): third replication seed, graph ablations of 2s-AGCN, original seeds retrained in the pinned environment of the replication (v7: replication seeds 3-4, environment re-runs, preprocessing sensitivity, dependence-aware and power statistics)",
+    "python": "3.13.16",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.4.6",
+      "scipy": "1.16.3",
+      "torch": "2.14.1+cu130",
+      "matplotlib": "3.10.0",
+      "pandas": "2.2.3",
+      "sklearn": "1.6.1",
+      "h5py": "3.14.0"
+    },
+    "cuda": {
+      "available": true,
+      "version": "13.0",
+      "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+    },
+    "first_seen": "Thu Nov 19 22:18:43 2026",
+    "last_seen": "Thu Nov 19 22:18:43 2026"
   }
 ]
