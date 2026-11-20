@@ -31,7 +31,8 @@ O.mkdir(parents=True, exist_ok=True)
 T = R / "tables"
 rows = json.loads((R / "metrics.json").read_text())
 # replication and environment re-runs (revision) are reported from their own tables
-rows = [r for r in rows if not r["model"].endswith(("_rep", "_env"))]
+rows = [r for r in rows if not r["model"].endswith(("_rep", "_env", "_pin")) and "_v8" not in r["model"]
+        and r["model"] not in ("agcn_static", "agcn_fixedgraph")]   # v8 runs: Stage 9i
 MAC = {}
 
 

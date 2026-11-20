@@ -157,6 +157,31 @@ def make_model(num_classes, parents=NTU_PARENTS, in_ch=3, base=64,
                     dropout=dropout)
 
 
+def stack_diff(pinned, now):
+    """Differences {key: (pinned, now)} between two software/hardware stacks
+    (dicts with python, numpy, torch, cuda, cudnn, device). Python is compared
+    on major.minor only: a patch release of the interpreter does not change
+    any numerical library, and Colab cannot install a chosen patch release."""
+    def norm(k, v):
+        if k == "python" and isinstance(v, str):
+            return ".".join(v.split(".")[:2])
+        return v
+    keys = sorted(set(pinned) | set(now))
+    return {k: (pinned.get(k), now.get(k)) for k in keys
+            if norm(k, pinned.get(k)) != norm(k, now.get(k))}
+
+
+def pinned_install_spec(pinned):
+    """pip arguments that reinstall the pinned torch and numpy, e.g. for
+    torch '2.14.1+cu130': torch==2.14.1 from the cu130 wheel index."""
+    tv = str(pinned["torch"])
+    base, _, local = tv.partition("+")
+    torch_args = [f"torch=={base}"]
+    if local.startswith("cu"):
+        torch_args += ["--index-url", f"https://download.pytorch.org/whl/{local}"]
+    return torch_args, [f"numpy=={pinned['numpy']}"]
+
+
 # =====================================================================
 # 3. One rung
 # =====================================================================

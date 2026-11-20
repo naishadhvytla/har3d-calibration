@@ -19,8 +19,21 @@ not published end-to-end systems (CTR-GCN's multi-scale temporal module and
 
 `graph_parameters(model)` returns the parameters that generate the adaptive
 graph, which the adjacency-freezing ablation stops updating mid-training.
+
+Graph ablations of 2s-AGCN (revision v8), everything else identical to `agcn`:
+    agcn_static      A + B: the freely learned graph B is kept, the
+                     data-dependent term alpha * C(x) is removed.
+    agcn_fixedgraph  A only: the graph is frozen at its initialisation
+                     (B = 0 and alpha = 0 at initialisation, never updated),
+                     i.e. 2s-AGCN's layer with the fixed skeleton adjacency.
+Both variants construct exactly the same modules, in the same order, as
+`agcn` (the unused ones are kept and frozen), so under the same seed they
+start from the same initial weights as the corresponding `agcn` run and
+differ from it only in the graph mechanism.
 """
 from __future__ import annotations
+
+import functools
 
 import torch
 import torch.nn as nn
@@ -28,7 +41,7 @@ import torch.nn.functional as F
 
 from har3d_v2 import adjacency
 
-ARCHS = ("stgcn", "agcn", "agcn_frozen", "ctrgcn")
+ARCHS = ("stgcn", "agcn", "agcn_frozen", "ctrgcn", "agcn_static", "agcn_fixedgraph")
 
 
 # ---------------------------------------------------------------------------
@@ -73,8 +86,11 @@ class STGCNBlock(nn.Module):
 # 2s-AGCN block: A + B + alpha * C(x)
 # ---------------------------------------------------------------------------
 class AGCNBlock(nn.Module):
-    def __init__(self, cin, cout, A, stride=1, residual=True, embed=None):
+    def __init__(self, cin, cout, A, stride=1, residual=True, embed=None, graph="full"):
         super().__init__()
+        if graph not in ("full", "static", "fixed"):
+            raise ValueError(f"graph must be full, static or fixed, not {graph!r}")
+        self.graph = graph
         self.K = A.shape[0]
         self.register_buffer("A", torch.as_tensor(A, dtype=torch.float32))
         self.B = nn.Parameter(torch.zeros(self.K, A.shape[1], A.shape[2]))
@@ -86,15 +102,30 @@ class AGCNBlock(nn.Module):
         self.bn = nn.BatchNorm2d(cout)
         self.tconv = _tconv(cout, stride)
         self.res = _residual(cin, cout, stride, residual)
+        # ablations: the parameters of the removed graph terms never update
+        frozen = {"full": (), "static": (self.theta, self.phi, self.alpha),
+                  "fixed": (self.theta, self.phi, self.alpha, self.B)}[graph]
+        for m in frozen:
+            for prm in ([m] if isinstance(m, nn.Parameter) else m.parameters()):
+                prm.requires_grad_(False)
 
-    def forward(self, x):
+    def effective_graph(self, x):
+        """(N, K, J, J) adjacency used by this layer for input x."""
         N, _, T, J = x.shape
-        r = self.res(x) if self.res is not None else 0
+        if self.graph == "fixed":
+            return self.A.unsqueeze(0).expand(N, -1, -1, -1)
+        if self.graph == "static":
+            return (self.A + self.B).unsqueeze(0).expand(N, -1, -1, -1)
         th = self.theta(x).view(N, self.K, self.embed, T, J).mean(3)
         ph = self.phi(x).view(N, self.K, self.embed, T, J).mean(3)
         C = torch.softmax(torch.einsum("nkej,nkel->nkjl", th, ph)
                           / (self.embed ** 0.5), dim=-1)
-        Aeff = self.A.unsqueeze(0) + self.B.unsqueeze(0) + self.alpha * C
+        return self.A.unsqueeze(0) + self.B.unsqueeze(0) + self.alpha * C
+
+    def forward(self, x):
+        N, _, T, J = x.shape
+        r = self.res(x) if self.res is not None else 0
+        Aeff = self.effective_graph(x)
         y = self.gconv(x).view(N, self.K, -1, T, J)
         y = torch.einsum("nkctv,nkvw->nctw", y, Aeff)
         y = F.relu(self.bn(y))
@@ -146,13 +177,17 @@ class CTRGCNBlock(nn.Module):
 
 
 _BLOCKS = {"stgcn": STGCNBlock, "agcn": AGCNBlock, "agcn_frozen": AGCNBlock,
-           "ctrgcn": CTRGCNBlock}
+           "ctrgcn": CTRGCNBlock,
+           "agcn_static": functools.partial(AGCNBlock, graph="static"),
+           "agcn_fixedgraph": functools.partial(AGCNBlock, graph="fixed")}
 
 # name fragments of the parameters that GENERATE the graph, per architecture
 _GRAPH_PARAM_KEYS = {
     "stgcn": (),
     "agcn": (".B", ".alpha", ".theta.", ".phi."),
     "agcn_frozen": (".B", ".alpha", ".theta.", ".phi."),
+    "agcn_static": (".B",),
+    "agcn_fixedgraph": (),
     "ctrgcn": (".PA", ".alpha", ".conv1.", ".conv2.", ".conv4."),
 }
 

@@ -308,6 +308,13 @@ check("masked_tensors drops exactly the tracker-loss sequence",
 check("Holm is monotone and never below raw p",
       np.all(C2.holm([0.01, 0.04, 0.03]) >= np.array([0.01, 0.04, 0.03]))
       and np.allclose(C2.holm([0.01, 0.04, 0.03]), [0.03, 0.06, 0.06]))
+_pin = dict(python="3.13.16", numpy="2.4.6", torch="2.14.1+cu130", cuda="13.0", cudnn=92800, device="G")
+check("stack_diff ignores the Python patch release only",
+      S.stack_diff(_pin, dict(_pin, python="3.13.17")) == {}
+      and set(S.stack_diff(_pin, dict(_pin, python="3.14.0", torch="2.15.0+cu130"))) == {"python", "torch"})
+check("pinned_install_spec reinstalls the pinned CUDA build of torch and numpy",
+      S.pinned_install_spec(_pin) == (["torch==2.14.1", "--index-url", "https://download.pytorch.org/whl/cu130"],
+                                      ["numpy==2.4.6"]))
 check("sign test drops ties", C2.sign_test([1, 1, 0, -1])[:2] == (2, 3))
 mu15, lo15, hi15 = C2.boot_mean_ci(rng15.normal(1, 1, 200))
 check("bootstrap mean CI brackets the mean", lo15 < mu15 < hi15)
@@ -533,6 +540,67 @@ try:
     check("matched-step snapshots and the best-accuracy checkpoint are returned",
           {"s4", "s8", "acc"} <= set(r2["extra"]) and r2["extra"]["s4"]["logits"].shape == (6, 3)
           and r2["info"]["steps_total"] >= r2["info"]["steps_run"])
+    # ---- v8: graph ablations of 2s-AGCN ----
+    _abl = {}
+    for arch in ("agcn", "agcn_static", "agcn_fixedgraph"):
+        torch.manual_seed(7)
+        _abl[arch] = HB.build(arch, 3, S.NTU_PARENTS, base=16)
+    _sd = _abl["agcn"].state_dict()
+    check("graph ablations start from the same weights as 2s-AGCN under one seed",
+          all(all(torch.equal(_sd[k], v) for k, v in _abl[a].state_dict().items())
+              for a in ("agcn_static", "agcn_fixedgraph")))
+    for arch in ("agcn_static", "agcn_fixedgraph"):
+        with torch.no_grad():
+            o = _abl[arch].eval()(torch.as_tensor(xt))
+        check(f"{arch} forward gives (N, K)", tuple(o.shape) == (6, 3))
+    _x = torch.as_tensor(xt)
+    _blk = [b for b in _abl["agcn"].layers]
+    with torch.no_grad():                      # the refactored full layer is the published formula
+        for b in _blk:
+            b.alpha.fill_(0.7); b.B.normal_(0, 0.1)
+        h = _abl["agcn"].bn(_x.permute(0, 4, 1, 2, 3).reshape(12, 3, 16, 25).permute(0, 1, 3, 2)
+                            .reshape(12, 75, 16)).view(12, 3, 25, 16).permute(0, 1, 3, 2)
+        b = _blk[0]
+        th = b.theta(h).view(12, b.K, b.embed, 16, 25).mean(3)
+        ph = b.phi(h).view(12, b.K, b.embed, 16, 25).mean(3)
+        Cm = torch.softmax(torch.einsum("nkej,nkel->nkjl", th, ph) / (b.embed ** 0.5), -1)
+        check("2s-AGCN layer: A + B + alpha * C(x)",
+              torch.allclose(b.effective_graph(h), b.A + b.B + 0.7 * Cm))
+    _p0 = {a: {k: v.clone() for k, v in _abl[a].named_parameters()} for a in _abl}
+    for a, m in _abl.items():                  # train exactly like train_rung does
+        m.train()
+        opt = torch.optim.AdamW(m.parameters(), lr=1e-2, weight_decay=1e-4)
+        for _ in range(3):
+            opt.zero_grad(set_to_none=True)
+            torch.nn.functional.cross_entropy(m(_x), torch.as_tensor(yt)).backward()
+            opt.step()
+    _moved = {a: {k for k, v in _abl[a].named_parameters() if not torch.equal(v, _p0[a][k])} for a in _abl}
+    _gk = lambda k, keys: any(("." + k).endswith(t) or t in "." + k for t in keys)
+    check("agcn_fixedgraph: B, alpha, theta, phi never update; the rest trains",
+          not any(_gk(k, (".B", ".alpha", ".theta.", ".phi.")) for k in _moved["agcn_fixedgraph"])
+          and any(".gconv." in k for k in _moved["agcn_fixedgraph"]))
+    check("agcn_fixedgraph uses exactly the skeleton adjacency A after training",
+          all(torch.equal(b.effective_graph(_x[:, :, :, :, 0])[0], b.A)
+              for b in [_abl["agcn_fixedgraph"].layers[0]]))
+    check("agcn_static: B learns, alpha / theta / phi never update",
+          any(k.endswith(".B") for k in _moved["agcn_static"])
+          and not any(_gk(k, (".alpha", ".theta.", ".phi.")) for k in _moved["agcn_static"]))
+    check("agcn: every graph parameter can learn (B and alpha move)",
+          any(k.endswith(".B") for k in _moved["agcn"]) and any(k.endswith(".alpha") for k in _moved["agcn"]))
+    with torch.no_grad():                      # static graph does not depend on the input
+        m = _abl["agcn_static"].eval()
+        o1 = m(_x)
+        for b in m.layers:
+            b.theta.weight.add_(1.0); b.phi.weight.mul_(-3.0); b.alpha.fill_(5.0)
+        check("agcn_static output does not depend on the data-dependent term",
+              torch.equal(o1, m(_x)))
+    check("graph_parameters: only B for agcn_static, none for agcn_fixedgraph",
+          len(HB.graph_parameters(_abl["agcn_fixedgraph"])) == 0
+          and len(HB.graph_parameters(_abl["agcn_static"])) == len(_abl["agcn_static"].layers))
+    r3 = S.train_rung(xt, yt, xt, yt, xt, yt, 3, arch="agcn_fixedgraph", max_steps=12,
+                      eval_every=4, patience=2, min_steps=4, bs=4, seed=0, verbose=False, device="cpu")
+    check("a ladder rung trains with a graph-ablation backbone",
+          r3["test"][0].shape == (6, 3) and r3["info"]["arch"] == "agcn_fixedgraph")
 except ImportError:
     print("  (torch not installed -- backbone tests skipped)")
 

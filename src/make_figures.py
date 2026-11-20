@@ -30,7 +30,8 @@ T = R / "tables"
 PS.apply()
 rows = json.loads((R / "metrics.json").read_text())
 # replication and environment re-runs (revision) are reported from their own tables
-rows = [r for r in rows if not r["model"].endswith(("_rep", "_env"))]
+rows = [r for r in rows if not r["model"].endswith(("_rep", "_env", "_pin")) and "_v8" not in r["model"]
+        and r["model"] not in ("agcn_static", "agcn_fixedgraph")]   # v8 runs: Stage 9i
 LABEL = {"daily": "DailyActivity3D", "action3d": "MSR-Action3D", "utkinect": "UTKinect", "ntu60": "NTU-60"}
 SMALL = ["action3d", "daily", "utkinect"]
 MCOL = {"stgcn": PS.PALETTE["blue"], "agcn": PS.PALETTE["vermillion"], "ctrgcn": PS.PALETTE["green"],

@@ -263,11 +263,11 @@ write("tab_replication.tex", r"""\begin{table*}[t]
 For each seed, the excess adaptive ECE averaged over the rungs of $10{,}000$,
 $20{,}000$ and $32{,}202$ training clips, and the paired differences. Seeds
 0--2 are the first-version runs, on which the $10{,}000$-clip boundary was
-chosen (exploratory); seeds 3 and 4 were trained afterward in one software
-environment under the hypotheses registered before training (confirmatory).
-The seed is the unit: a $t$-interval and an exact two-sided sign-flip test
-over seeds, whose smallest attainable $p$-value is $0.25$, $0.5$ and $0.0625$
-for three, two and five seeds.}
+chosen (exploratory); seeds 3, 4 and 5 were trained afterward in one software
+environment under the hypotheses registered before training (confirmatory;
+seed 5 was registered as an optional third seed). The seed is the unit: a
+$t$-interval and an exact two-sided sign-flip test over seeds, whose smallest
+attainable $p$-value is $0.25$ for three seeds and $0.031$ for six.}
 \label{tab:replication}
 \centering\footnotesize
 \begin{tabular}{@{}llcccccc@{}}
@@ -417,3 +417,52 @@ h, l = axes[2].get_legend_handles_labels()
 axes[2].legend(h, l, fontsize=6, loc="upper left")
 PS.save(fig, str(O / "fig8_steps")); plt.close(fig)
 print("figures 5, 7, 8 written to", O)
+
+# ------------------------------------------------------------ v8: graph ablations of 2s-AGCN
+if (T / "graph_ablation_seed_level.csv").exists():
+    ab = rd("graph_ablation_seed_level.csv")
+    am = rd("graph_ablation_means.csv")
+    CH = [("agcn_fixedgraph", "stgcn", r"(a) layer without graph adaptivity", r"fixed $-$ ST-GCN"),
+          ("agcn_static", "agcn_fixedgraph", r"(b) learned graph $\mathbf{A}_{\mathrm{L}}$", r"static $-$ fixed"),
+          ("agcn", "agcn_static", r"(c) data-dependent term $\alpha\mathbf{C}(\vx)$", r"full $-$ static"),
+          ("agcn", "agcn_fixedgraph", r"(b) $+$ (c): all graph adaptivity", r"full $-$ fixed"),
+          ("agcn", "stgcn", r"(a) $+$ (b) $+$ (c): 2s-AGCN $-$ ST-GCN", r"full $-$ ST-GCN")]
+    VN = {"stgcn": "ST-GCN",
+          "agcn_fixedgraph": r"2s-AGCN, fixed: $\mathbf{A}$",
+          "agcn_static": r"2s-AGCN, static: $\mathbf{A}+\mathbf{A}_{\mathrm{L}}$",
+          "agcn": r"2s-AGCN, full: $\mathbf{A}+\mathbf{A}_{\mathrm{L}}+\alpha\mathbf{C}(\vx)$"}
+    top = ""
+    for v in VN:
+        g = {int(r["n_train"]): r for r in am if r["variant"] == v}
+        top += VN[v] + " & " + " & ".join(f"{float(g[n]['excess']):.3f}" for n in RUNGS) \
+            + " & " + " & ".join(f"{float(g[n]['top1']):.3f}" for n in RUNGS) + "\\\\\n"
+    bot = ""
+    for a, b, lab, _ in CH:
+        row = {r["metric"]: r for r in ab if (r["model_a"], r["model_b"]) == (a, b)}
+        e, t = row["null_excess"], row["top1"]
+        bot += (f"{lab} & {sg(e['mean'], 4)} & [{sg(e['ci_lo'], 4)}, {sg(e['ci_hi'], 4)}] & "
+                f"{e['n_positive']}/{e['n_seeds']} & {float(e['p_sign_flip']):.3f} & {sg(t['mean'], 3)}\\\\\n")
+    write("tab_ablation.tex", r"""\begin{table*}[t]
+\caption{Graph ablations of 2s-AGCN on the shared trunk, six seeds (0--5) in the pinned environment.
+Top: excess adaptive ECE and top-1 accuracy per rung, mean over seeds. The fixed variant freezes the graph
+at its initialization ($\mathbf{A}_{\mathrm{L}}=0$, $\alpha=0$); the static variant learns
+$\mathbf{A}_{\mathrm{L}}$ but has no data-dependent term. Bottom: the 2s-AGCN $-$ ST-GCN difference in
+excess adaptive ECE split into three steps; per seed, the difference averaged over the three rungs, then
+the mean over seeds, its 95\% $t$-interval, the number of positive seeds and the exact two-sided
+sign-flip $p$ (smallest attainable value $0.031$), with the corresponding change in top-1.}
+\label{tab:ablation}
+\centering\footnotesize
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{excess $\aece$} & \multicolumn{3}{c}{top-1}\\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+Variant & """ + " & ".join(f"{n:,}".replace(",", "{,}") for n in RUNGS) + " & " + \
+        " & ".join(f"{n:,}".replace(",", "{,}") for n in RUNGS) + r"""\\
+\midrule
+""" + top + r"""\midrule
+Step of the chain & $\Delta$ excess & 95\% interval & seeds $>0$ & $p$ & $\Delta$ top-1\\
+\midrule
+""" + bot + r"""\bottomrule
+\end{tabular}
+\end{table*}
+""")
