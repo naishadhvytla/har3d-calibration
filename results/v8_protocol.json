@@ -1,0 +1,45 @@
+{
+  "registered": "Thu Nov 19 17:24:06 2026",
+  "status": "written before any v8 run was trained",
+  "runs": {
+    "archs": [
+      "agcn",
+      "stgcn",
+      "agcn_static",
+      "agcn_fixedgraph",
+      "ctrgcn"
+    ],
+    "tag": "<arch>_v8",
+    "seeds": [
+      5,
+      3,
+      4,
+      0,
+      1,
+      2
+    ],
+    "rungs": [
+      10000,
+      20000,
+      40091
+    ],
+    "environment": "one GPU type and software stack for every v8 run (v8_env.json)"
+  },
+  "graph_ablations": {
+    "agcn_static": "A + B (learned static graph), data-dependent term alpha * C(x) removed",
+    "agcn_fixedgraph": "A only: graph parameters frozen at initialisation (B = 0, alpha = 0)",
+    "questions": [
+      "Q1: is the 2s-AGCN minus ST-GCN excess-ECE difference at >= 10,000 clips produced by graph adaptivity (2s-AGCN minus agcn_fixedgraph)?",
+      "Q2: by the data-dependent term (2s-AGCN minus agcn_static)?",
+      "Q3: by the learned static graph (agcn_static minus agcn_fixedgraph)?",
+      "Q4: by the layer without adaptivity (agcn_fixedgraph minus ST-GCN)?"
+    ]
+  },
+  "backbone_comparison": "the three pairwise differences with six seeds in one environment; also six seeds with one environment per seed (seeds 0-2 original, 3-4 G4 replication, 5 v8)",
+  "environment_effect": "seeds 0-4: earlier run vs v8 run of the same backbone, rung and seed, against the standard deviation across seeds",
+  "statistic": "per seed: difference in excess adaptive ECE (15 equal-mass bins, matched null floor) averaged over the three rungs; also NLL, Brier score, adaptive ECE, top-1",
+  "tests": [
+    "exact sign-flip test over seeds, two-sided",
+    "t-interval of the mean per-seed difference"
+  ]
+}

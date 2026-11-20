@@ -1,0 +1,12 @@
+{
+  "pinned": "Thu Nov 19 17:24:06 2026",
+  "stack": {
+    "python": "3.13.16",
+    "numpy": "2.4.6",
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "cudnn": 92800,
+    "device": "NVIDIA A100-SXM4-80GB"
+  },
+  "platform": "Linux-6.6.159+-x86_64-with-glibc2.39"
+}
